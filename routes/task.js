@@ -20,48 +20,50 @@ taskRoutes.route("/tasks").get(function (req, res) {
     });
 });
 
-// following functions still need to be modified --Wuqian Ye
+// This section will help you create a new task.
+taskRoutes.route("/task/add").post(function (req, res) {
+  let db_connect = dbo.getDb("todo_list");
+  let myobj = {
+    user_id: req.body.user_id,
+    title: req.body.title,
+    description: req.body.description,
+    due_date: req.body.due_date,
+    isDone: req.body.isDone,
+  };
+  db_connect.collection("tasks").insertOne(myobj, function (err, res) {
+    if (err) throw err;
+  });
+});
 
-// // This section will help you create a new task.
-// taskRoutes.route("/task/add").post(function (req, res) {
-//   let db_connect = dbo.getDb("todo_list");
-//   let myobj = {
-//     person_name: req.body.person_name,
-//     person_position: req.body.person_position,
-//     person_level: req.body.person_level,
-//   };
-//   db_connect.collection("tasks").insertOne(myobj, function (err, res) {
-//     if (err) throw err;
-//   });
-// });
+// This section will help you update a task by id.
+taskRoutes.route("/update/:id").post(function (req, res) {
+  let db_connect = dbo.getDb("todo_list");
+  let myquery = { id: req.body.id };
+  let newvalues = {
+    $set: {
+        user_id: req.body.user_id,
+        title: req.body.title,
+        description: req.body.description,
+        due_date: req.body.due_date,
+        isDone: req.body.isDone,
+    },
+  };
+  db_connect
+    .collection("tasks")
+    .updateOne(myquery, newvalues, function (err, res) {
+      if (err) throw err;
+      console.log("1 task updated");
+    });
+});
 
-// // This section will help you update a task by id.
-// taskRoutes.route("/update/:id").post(function (req, res) {
-//   let db_connect = dbo.getDb("todo_list");
-//   let myquery = { id: req.body.id };
-//   let newvalues = {
-//     $set: {
-//       person_name: req.body.person_name,
-//       person_position: req.body.person_position,
-//       person_level: req.body.person_level,
-//     },
-//   };
-//   db_connect
-//     .collection("tasks")
-//     .updateOne(myquery, newvalues, function (err, res) {
-//       if (err) throw err;
-//       console.log("1 task updated");
-//     });
-// });
-
-// // This section will help you delete a task
-// taskRoutes.route("/:id").delete((req, res) => {
-//   let db_connect = dbo.getDb("todo_list");
-//   var myquery = { id: req.body.id };
-//   db_connect.collection("tasks").deleteOne(myquery, function (err, obj) {
-//     if (err) throw err;
-//     console.log("1 task deleted");
-//   });
-// });
+// This section will help you delete a task
+taskRoutes.route("/:id").delete((req, res) => {
+  let db_connect = dbo.getDb("todo_list");
+  var myquery = { id: req.body.id };
+  db_connect.collection("tasks").deleteOne(myquery, function (err, obj) {
+    if (err) throw err;
+    console.log("1 task deleted");
+  });
+});
 
 module.exports = taskRoutes;
