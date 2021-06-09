@@ -36,7 +36,7 @@ taskRoutes.route("/task/add").post(function (req, res) {
 });
 
 // This section will help you update a task by id.
-taskRoutes.route("/update/:id").post(function (req, res) {
+taskRoutes.route("/update-task/:id").post(function (req, res) {
   let db_connect = dbo.getDb("todo_list");
   let myquery = { id: req.body.id };
   let newvalues = {
@@ -57,7 +57,7 @@ taskRoutes.route("/update/:id").post(function (req, res) {
 });
 
 // This section will help you delete a task
-taskRoutes.route("/:id").delete((req, res) => {
+taskRoutes.route("/delete-task/:id").delete((req, res) => {
   let db_connect = dbo.getDb("todo_list");
   var myquery = { id: req.body.id };
   db_connect.collection("tasks").deleteOne(myquery, function (err, obj) {
